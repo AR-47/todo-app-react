@@ -8,4 +8,11 @@ export const data: ITodo[] = [
     status: "pending",
     creationDate: "05-08-2023",
   },
+  {
+    id: 2,
+    title: "Create a personal react project",
+    description: "Make a start on the matching pairs game",
+    status: "pending",
+    creationDate: "05-08-2023",
+  },
 ];
