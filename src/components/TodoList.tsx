@@ -20,27 +20,18 @@ export function TodoList(): JSX.Element {
   const [newTodoTitle, setNewTodoTitle] = useState<string>("");
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
 
-  useEffect(() => {
+  const fetchTodos = () => {
     axios
       .get(baseUrl + "items")
       .then((response) => {
         setTodos(response.data);
       })
-      .catch((error) => console.log(`Caught error in useEffect: ${error}`));
-  }, [todos]);
+      .catch((error) => console.log(`Caught error in fetchTodos: ${error}`));
+  };
 
-  //   () => {
-  // const fetchTodos = async () => {
-  //   try {
-  //     const response = await axios.get(baseUrl);
-  //     console.log(response);
-  //     console.log("ENTERED TRY BLOCK");
-  //   } catch (error) {
-  //     console.log(error);
-  //     console.log("ENTERED CATCH BLOCK");
-  //   }
-  // };
-  // fetchTodos();}
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
   const handleAddNewTodo = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -51,13 +42,26 @@ export function TodoList(): JSX.Element {
         status: "pending",
         creationDate: "07-08-23",
       })
-      .then(function (response) {
-        console.log(response);
+      .then(() => {
         setNewTodoTitle("");
         setNewTodoDescription("");
+        fetchTodos();
       })
       .catch((error) =>
         console.log(`Caught error in handleAddNewTodo: ${error}`)
+      );
+  };
+
+  const handleDeleteTodo = (e: { preventDefault: () => void }, id: number) => {
+    e.preventDefault();
+    axios
+      .delete(`${baseUrl}items/${id}`)
+      .then(() => {
+        console.log(`Deleted todo with ID: ${id}`);
+        fetchTodos();
+      })
+      .catch((error) =>
+        console.log(`Caught error in delete request: ${error}`)
       );
   };
 
@@ -87,7 +91,12 @@ export function TodoList(): JSX.Element {
       </form>
 
       {todos.map((todoItem: ITodo) => (
-        <TodoCard key={todoItem.id} todo={todoItem} />
+        <TodoCard
+          key={todoItem.id}
+          id={todoItem.id}
+          todo={todoItem}
+          onDelete={handleDeleteTodo}
+        />
       ))}
     </div>
   );
