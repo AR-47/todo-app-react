@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { TodoCard } from "./TodoCard";
-import { data } from "../data";
 import axios from "axios";
 
 export interface ITodo {
@@ -13,21 +12,21 @@ export interface ITodo {
 
 const baseUrl =
   process.env.NODE_ENV === "production"
-    ? "https://adil-todo-app.onrender.com/items"
-    : "http://localhost:5050/items";
+    ? "https://adil-todo-app.onrender.com/"
+    : "http://localhost:5050/";
 
 export function TodoList(): JSX.Element {
   const [todos, setTodos] = useState<ITodo[]>([]);
+  const [newTodoTitle, setNewTodoTitle] = useState<string>("");
+  const [newTodoDescription, setNewTodoDescription] = useState<string>("");
 
   useEffect(() => {
     axios
-      .get(baseUrl)
+      .get(baseUrl + "items")
       .then((response) => {
-        console.log(response);
-        console.log("Entered the .then function");
         setTodos(response.data);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(`Caught error in useEffect: ${error}`));
   }, [todos]);
 
   //   () => {
@@ -43,8 +42,50 @@ export function TodoList(): JSX.Element {
   // };
   // fetchTodos();}
 
+  const handleAddNewTodo = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    axios
+      .post(baseUrl + "items", {
+        title: newTodoTitle,
+        description: newTodoDescription,
+        status: "pending",
+        creationDate: "07-08-23",
+      })
+      .then(function (response) {
+        console.log(response);
+        setNewTodoTitle("");
+        setNewTodoDescription("");
+      })
+      .catch((error) =>
+        console.log(`Caught error in handleAddNewTodo: ${error}`)
+      );
+  };
+
   return (
     <div>
+      <button className="create-new-todo-btn">+</button>
+      <br></br>
+      <form onSubmit={handleAddNewTodo}>
+        <label htmlFor="title">Enter a title: </label>
+        <input
+          name="title"
+          type="text"
+          value={newTodoTitle}
+          onChange={(e) => setNewTodoTitle(e.target.value)}
+        />
+        <br></br>
+
+        <label htmlFor="description">Enter the description: </label>
+        <input
+          name="description"
+          type="text"
+          value={newTodoDescription}
+          onChange={(e) => setNewTodoDescription(e.target.value)}
+        />
+        <br></br>
+        <button type="submit">Submit</button>
+      </form>
+
       {todos.map((todoItem: ITodo) => (
         <TodoCard key={todoItem.id} todo={todoItem} />
       ))}
