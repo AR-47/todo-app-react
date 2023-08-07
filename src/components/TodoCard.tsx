@@ -3,10 +3,12 @@ import { ITodo } from "./TodoList";
 
 interface todoCardProps {
   key: number;
+  id: number;
   todo: ITodo;
+  onDelete: (e: { preventDefault: () => void }, id: number) => void;
 }
 
-export function TodoCard({ todo }: todoCardProps): JSX.Element {
+export function TodoCard({ id, todo, onDelete }: todoCardProps): JSX.Element {
   return (
     <div className="todo-card">
       <div className="todo-content">
@@ -16,7 +18,7 @@ export function TodoCard({ todo }: todoCardProps): JSX.Element {
       <div className="todo-actions">
         <button>Mark as completed</button>
         <button>Edit</button>
-        <button>Delete</button>
+        <button onClick={(e) => onDelete(e, id)}>Delete</button>
       </div>
     </div>
   );
