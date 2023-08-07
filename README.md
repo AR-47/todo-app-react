@@ -1,3 +1,3 @@
 ## Deployed Netlify App
 
-adil-todo.netlify.app
+https://adil-todo.netlify.app/
