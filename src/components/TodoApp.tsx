@@ -42,12 +42,20 @@ export function TodoApp(): JSX.Element {
 
   const handleAddNewTodo = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    const date = new Date();
+    const [day, month, year] = [
+      date.getDate(),
+      date.getMonth() + 1,
+      date.getFullYear(),
+    ];
+    const currentDate = `${day}-${month}-${year}`;
+
     axios
       .post(baseUrl + "items", {
         title: newTodoTitle,
         description: newTodoDescription,
         status: "pending",
-        creationDate: "07-08-23",
+        creationDate: currentDate,
       })
       .then(() => {
         setNewTodoTitle("");
@@ -73,7 +81,6 @@ export function TodoApp(): JSX.Element {
   };
 
   const handleUpdateStatus = (id: number) => {
-    debugger;
     const todoWithGivenId = allTodos.find(
       (todoItem: ITodo) => todoItem.id === id
     ) as ITodo;
