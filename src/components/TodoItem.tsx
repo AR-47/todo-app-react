@@ -1,14 +1,20 @@
 import "../styles/todo.css";
-import { ITodo } from "./TodoList";
+import { ITodo } from "./TodoApp";
 
-interface todoCardProps {
+interface todoItemProps {
   key: number;
   id: number;
   todo: ITodo;
   onDelete: (e: { preventDefault: () => void }, id: number) => void;
+  onUpdateStatus: (id: number) => void;
 }
 
-export function TodoCard({ id, todo, onDelete }: todoCardProps): JSX.Element {
+export function TodoItem({
+  id,
+  todo,
+  onDelete,
+  onUpdateStatus,
+}: todoItemProps): JSX.Element {
   return (
     <div className="todo-card">
       <div className="todo-content">
@@ -16,7 +22,9 @@ export function TodoCard({ id, todo, onDelete }: todoCardProps): JSX.Element {
         <p>{todo.description}</p>
       </div>
       <div className="todo-actions">
-        <button>Mark as completed</button>
+        <button onClick={() => onUpdateStatus(id)}>
+          {todo.status === "pending" ? "Mark as completed" : "Mark as pending"}
+        </button>
         <button>Edit</button>
         <button onClick={(e) => onDelete(e, id)}>Delete</button>
       </div>

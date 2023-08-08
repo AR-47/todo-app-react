@@ -1,4 +1,4 @@
-import { ITodo } from "./components/TodoList";
+import { ITodo } from "./components/TodoApp";
 
 export const data: ITodo[] = [
   {
