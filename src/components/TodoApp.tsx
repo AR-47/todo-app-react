@@ -58,6 +58,7 @@ export function TodoApp(): JSX.Element {
 
   useEffect(() => {
     fetchTodos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy]);
 
   const handleAddNewTodo = (e: { preventDefault: () => void }) => {
