@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { TodoItem } from "./TodoItem";
 import axios from "axios";
+import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 
 export interface ITodo {
   id: number;
   title: string;
   description: string;
   status: "completed" | "pending";
-  creationDate: string;
+  creationDate: Date;
 }
 
 const baseUrl =
@@ -19,6 +20,7 @@ export function TodoApp(): JSX.Element {
   const [allTodos, setAllTodos] = useState<ITodo[]>([]);
   const [newTodoTitle, setNewTodoTitle] = useState<string>("");
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("newestLast");
 
   const pendingTodos = allTodos.filter(
     (todoItem: ITodo) => todoItem.status === "pending"
@@ -27,29 +29,40 @@ export function TodoApp(): JSX.Element {
     (todoItem: ITodo) => todoItem.status === "completed"
   );
 
-  const fetchTodos = () => {
-    axios
-      .get(baseUrl + "items")
-      .then((response) => {
-        setAllTodos(response.data);
-      })
-      .catch((error) => console.log(`Caught error in fetchTodos: ${error}`));
-  };
+  async function fetchTodos() {
+    try {
+      const response = await axios.get(baseUrl + "items");
+      const todos: ITodo[] = response.data;
+      const sortedTodos: ITodo[] = [...todos];
+
+      switch (sortBy) {
+        case "newestLast":
+          sortedTodos.sort((a, b) =>
+            sortByAscDates(a.creationDate, b.creationDate)
+          );
+          break;
+        case "newestFirst":
+          sortedTodos.sort((a, b) =>
+            sortByDescDates(a.creationDate, b.creationDate)
+          );
+          break;
+        default:
+          break;
+      }
+
+      setAllTodos(sortedTodos);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     fetchTodos();
-  }, []);
+  }, [sortBy]);
 
   const handleAddNewTodo = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    const date = new Date();
-    const [day, month, year] = [
-      date.getDate(),
-      date.getMonth() + 1,
-      date.getFullYear(),
-    ];
-    const currentDate = `${day}-${month}-${year}`;
-
+    const currentDate = new Date();
     axios
       .post(baseUrl + "items", {
         title: newTodoTitle,
@@ -110,32 +123,50 @@ export function TodoApp(): JSX.Element {
     }
   };
 
+  const handleSortBy = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    switch (e.target.value) {
+      case "newestLast":
+        setSortBy("newestLast");
+        break;
+      case "newestFirst":
+        setSortBy("newestFirst");
+        break;
+      default:
+        break;
+    }
+    fetchTodos();
+  };
+
   return (
     <div>
-      <button className="create-new-todo-btn">+</button>
-      <br></br>
       <form onSubmit={handleAddNewTodo}>
-        <label htmlFor="title">Enter a title: </label>
         <input
           name="title"
           type="text"
           value={newTodoTitle}
+          placeholder="Enter a title"
           onChange={(e) => setNewTodoTitle(e.target.value)}
         />
         <br></br>
 
-        <label htmlFor="description">Enter the description: </label>
         <input
           name="description"
           type="text"
           value={newTodoDescription}
+          placeholder="Enter the description"
           onChange={(e) => setNewTodoDescription(e.target.value)}
         />
         <br></br>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Add</button>
       </form>
       <h2>My to-do list</h2>
+      <p>Sort by</p>
+      <select name="sortPendingTodosBy" onChange={handleSortBy}>
+        <option value="newestLast">Oldest to newest</option>
+        <option value="newestFirst">Newest to oldest</option>
+      </select>
+
       {pendingTodos.map((todoItem: ITodo) => (
         <TodoItem
           key={todoItem.id}
