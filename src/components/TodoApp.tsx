@@ -5,20 +5,18 @@ import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 
 export interface ITodo {
   id: number;
-  title: string;
   description: string;
   status: "completed" | "pending";
   creationDate: Date;
 }
 
-const baseUrl =
+export const baseUrl =
   process.env.NODE_ENV === "production"
     ? "https://adil-todo-app.onrender.com/"
     : "http://localhost:5050/";
 
 export function TodoApp(): JSX.Element {
   const [allTodos, setAllTodos] = useState<ITodo[]>([]);
-  const [newTodoTitle, setNewTodoTitle] = useState<string>("");
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("newestLast");
 
@@ -66,13 +64,11 @@ export function TodoApp(): JSX.Element {
     const currentDate = new Date();
     axios
       .post(baseUrl + "items", {
-        title: newTodoTitle,
         description: newTodoDescription,
         status: "pending",
         creationDate: currentDate,
       })
       .then(() => {
-        setNewTodoTitle("");
         setNewTodoDescription("");
         fetchTodos();
       })
@@ -142,25 +138,15 @@ export function TodoApp(): JSX.Element {
     <div>
       <form onSubmit={handleAddNewTodo}>
         <input
-          name="title"
-          type="text"
-          value={newTodoTitle}
-          placeholder="Enter a title"
-          onChange={(e) => setNewTodoTitle(e.target.value)}
-        />
-        <br></br>
-
-        <input
           name="description"
           type="text"
+          placeholder="Add a new task"
           value={newTodoDescription}
-          placeholder="Enter the description"
           onChange={(e) => setNewTodoDescription(e.target.value)}
         />
-        <br></br>
-
         <button type="submit">Add</button>
       </form>
+
       <h2>My to-do list</h2>
       <p>Sort by</p>
       <select name="sortPendingTodosBy" onChange={handleSortBy}>
@@ -175,6 +161,7 @@ export function TodoApp(): JSX.Element {
           todo={todoItem}
           onDelete={handleDeleteTodo}
           onUpdateStatus={handleUpdateStatus}
+          refreshTodos={fetchTodos}
         />
       ))}
       <h2>Completed</h2>
@@ -185,6 +172,7 @@ export function TodoApp(): JSX.Element {
           todo={todoItem}
           onDelete={handleDeleteTodo}
           onUpdateStatus={handleUpdateStatus}
+          refreshTodos={fetchTodos}
         />
       ))}
     </div>
