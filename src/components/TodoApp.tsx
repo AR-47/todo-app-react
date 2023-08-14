@@ -5,7 +5,6 @@ import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 
 export interface ITodo {
   id: number;
-  title: string;
   description: string;
   status: "completed" | "pending";
   creationDate: Date;
@@ -18,7 +17,6 @@ const baseUrl =
 
 export function TodoApp(): JSX.Element {
   const [allTodos, setAllTodos] = useState<ITodo[]>([]);
-  const [newTodoTitle, setNewTodoTitle] = useState<string>("");
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("newestLast");
 
@@ -66,13 +64,11 @@ export function TodoApp(): JSX.Element {
     const currentDate = new Date();
     axios
       .post(baseUrl + "items", {
-        title: newTodoTitle,
         description: newTodoDescription,
         status: "pending",
         creationDate: currentDate,
       })
       .then(() => {
-        setNewTodoTitle("");
         setNewTodoDescription("");
         fetchTodos();
       })
@@ -144,15 +140,6 @@ export function TodoApp(): JSX.Element {
     <div>
       <form onSubmit={handleAddNewTodo}>
         <input
-          name="title"
-          type="text"
-          value={newTodoTitle}
-          placeholder="Enter a title"
-          onChange={(e) => setNewTodoTitle(e.target.value)}
-        />
-        <br></br>
-
-        <input
           name="description"
           type="text"
           value={newTodoDescription}
@@ -160,7 +147,6 @@ export function TodoApp(): JSX.Element {
           onChange={(e) => setNewTodoDescription(e.target.value)}
         />
         <br></br>
-
         <button type="submit">Add</button>
       </form>
 

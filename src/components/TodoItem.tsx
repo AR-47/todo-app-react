@@ -20,7 +20,6 @@ export function TodoItem({
   return (
     <div className="todo-card">
       <div className="todo-content">
-        <h2>{todo.title}</h2>
         <p>{todo.description}</p>
       </div>
       <div className="todo-actions">
