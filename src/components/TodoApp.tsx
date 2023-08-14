@@ -138,6 +138,8 @@ export function TodoApp(): JSX.Element {
     fetchTodos();
   };
 
+  // const handleEditTodo = () => {};
+
   return (
     <div>
       <form onSubmit={handleAddNewTodo}>
@@ -161,6 +163,7 @@ export function TodoApp(): JSX.Element {
 
         <button type="submit">Add</button>
       </form>
+
       <h2>My to-do list</h2>
       <p>Sort by</p>
       <select name="sortPendingTodosBy" onChange={handleSortBy}>
