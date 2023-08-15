@@ -1,15 +1,8 @@
-import { useState } from "react";
 import "../styles/todo.css";
-import { ITodo, baseUrl } from "./TodoApp";
 import axios from "axios";
-
-interface todoItemProps {
-  id: number;
-  todo: ITodo;
-  onDelete: (e: { preventDefault: () => void }, id: number) => void;
-  onUpdateStatus: (id: number) => void;
-  refreshTodos: () => Promise<void>;
-}
+import { useState } from "react";
+import { baseUrl } from "./TodoApp";
+import { todoItemProps } from "../interfaces";
 
 export function TodoItem({
   id,
