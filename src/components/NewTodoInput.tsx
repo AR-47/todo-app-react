@@ -14,7 +14,9 @@ export function NewTodoInput({
         value={newTodo}
         onChange={(e) => setNewTodo(e.target.value)}
       />
-      <button type="submit">Add</button>
+      <button type="submit" className="btn btn-success btn-sm">
+        Add
+      </button>
     </form>
   );
 }

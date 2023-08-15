@@ -4,6 +4,7 @@ import axios from "axios";
 import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 import { ITodo } from "../interfaces";
 import { NewTodoInput } from "./NewTodoInput";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export const baseUrl =
   process.env.NODE_ENV === "production"
