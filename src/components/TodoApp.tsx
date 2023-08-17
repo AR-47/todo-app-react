@@ -2,18 +2,14 @@ import { useEffect, useState } from "react";
 import { TodoItem } from "./TodoItem";
 import axios from "axios";
 import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
-
-export interface ITodo {
-  id: number;
-  description: string;
-  status: "completed" | "pending";
-  creationDate: Date;
-}
+import { ITodo } from "../interfaces";
+import { NewTodoInput } from "./NewTodoInput";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export const baseUrl =
   process.env.NODE_ENV === "production"
     ? "https://adil-todo-app.onrender.com/"
-    : "http://localhost:5050/";
+    : "http://localhost:4000/";
 
 export function TodoApp(): JSX.Element {
   const [allTodos, setAllTodos] = useState<ITodo[]>([]);
@@ -33,21 +29,22 @@ export function TodoApp(): JSX.Element {
       const todos: ITodo[] = response.data;
       const sortedTodos: ITodo[] = [...todos];
 
-      switch (sortBy) {
-        case "newestLast":
-          sortedTodos.sort((a, b) =>
-            sortByAscDates(a.creationDate, b.creationDate)
-          );
-          break;
-        case "newestFirst":
-          sortedTodos.sort((a, b) =>
-            sortByDescDates(a.creationDate, b.creationDate)
-          );
-          break;
-        default:
-          break;
+      if (sortedTodos.length > 0) {
+        switch (sortBy) {
+          case "newestLast":
+            sortedTodos.sort((a, b) =>
+              sortByAscDates(a.creationDate, b.creationDate)
+            );
+            break;
+          case "newestFirst":
+            sortedTodos.sort((a, b) =>
+              sortByDescDates(a.creationDate, b.creationDate)
+            );
+            break;
+          default:
+            break;
+        }
       }
-
       setAllTodos(sortedTodos);
     } catch (error) {
       console.error(error);
@@ -72,9 +69,7 @@ export function TodoApp(): JSX.Element {
         setNewTodoDescription("");
         fetchTodos();
       })
-      .catch((error) =>
-        console.log(`Caught error in handleAddNewTodo: ${error}`)
-      );
+      .catch((error) => console.log(error));
   };
 
   const handleDeleteTodo = (e: { preventDefault: () => void }, id: number) => {
@@ -86,7 +81,7 @@ export function TodoApp(): JSX.Element {
         fetchTodos();
       })
       .catch((error) =>
-        console.log(`Caught error in delete request: ${error}`)
+        console.log(`error found in handleDelete todo ${error}`)
       );
   };
 
@@ -97,26 +92,20 @@ export function TodoApp(): JSX.Element {
 
     if (todoWithGivenId.status === "pending") {
       axios
-        .patch(`${baseUrl}items/${id}}`, {
+        .patch(`${baseUrl}items/${id}`, {
+          description: todoWithGivenId.description,
           status: "completed",
         })
         .then(() => fetchTodos())
-        .catch((error) =>
-          console.log(
-            `Caught error in handleUpdateStatus > pending > patch request: ${error}`
-          )
-        );
+        .catch((error) => console.log(error));
     } else {
       axios
-        .patch(`${baseUrl}items/${id}}`, {
+        .patch(`${baseUrl}items/${id}`, {
+          description: todoWithGivenId.description,
           status: "pending",
         })
         .then(() => fetchTodos())
-        .catch((error) =>
-          console.log(
-            `Caught error in handleUpdateStatus > completed > patch request: ${error}`
-          )
-        );
+        .catch((error) => console.log(error));
     }
   };
 
@@ -136,18 +125,11 @@ export function TodoApp(): JSX.Element {
 
   return (
     <div>
-      <form onSubmit={handleAddNewTodo}>
-        <input
-          name="description"
-          type="text"
-          placeholder="Add a new task"
-          value={newTodoDescription}
-          onChange={(e) => setNewTodoDescription(e.target.value)}
-        />
-        <button type="submit">Add</button>
-      </form>
-
-      <h2>My to-do list</h2>
+      <NewTodoInput
+        onSubmitNewTodo={handleAddNewTodo}
+        newTodo={newTodoDescription}
+        setNewTodo={setNewTodoDescription}
+      />
       <p>Sort by</p>
       <select name="sortPendingTodosBy" onChange={handleSortBy}>
         <option value="newestLast">Oldest to newest</option>
