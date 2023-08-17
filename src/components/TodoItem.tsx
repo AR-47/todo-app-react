@@ -19,8 +19,14 @@ export function TodoItem({
   const handleEditTodo = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     axios
-      .patch(`${baseUrl}items/${id}}`, { description: updatedTodoDescription })
-      .then(() => refreshTodos())
+      .patch(`${baseUrl}items/${id}`, {
+        description: updatedTodoDescription,
+        status: todo.status,
+      })
+      .then(() => {
+        console.log("in the .then of the axios patch handler function");
+        refreshTodos();
+      })
       .catch((error) =>
         console.log(`Caught error in handleEditTodo > patch request: ${error}`)
       );
@@ -54,10 +60,11 @@ export function TodoItem({
         <button
           onClick={() => {
             setIsEditing((prev) => (prev === false ? true : false));
+            setUpdatedTodoDescription(todo.description);
           }}
           className="btn btn-warning btn-sm"
         >
-          {isEditing === false ? "Edit" : "Cancel"}
+          {isEditing === false ? "Update" : "Cancel"}
         </button>
         {!isEditing && (
           <button

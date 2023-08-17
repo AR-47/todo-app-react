@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 export const baseUrl =
   process.env.NODE_ENV === "production"
     ? "https://adil-todo-app.onrender.com/"
-    : "http://localhost:5050/";
+    : "http://localhost:4000/";
 
 export function TodoApp(): JSX.Element {
   const [allTodos, setAllTodos] = useState<ITodo[]>([]);
@@ -29,21 +29,22 @@ export function TodoApp(): JSX.Element {
       const todos: ITodo[] = response.data;
       const sortedTodos: ITodo[] = [...todos];
 
-      switch (sortBy) {
-        case "newestLast":
-          sortedTodos.sort((a, b) =>
-            sortByAscDates(a.creationDate, b.creationDate)
-          );
-          break;
-        case "newestFirst":
-          sortedTodos.sort((a, b) =>
-            sortByDescDates(a.creationDate, b.creationDate)
-          );
-          break;
-        default:
-          break;
+      if (sortedTodos.length > 0) {
+        switch (sortBy) {
+          case "newestLast":
+            sortedTodos.sort((a, b) =>
+              sortByAscDates(a.creationDate, b.creationDate)
+            );
+            break;
+          case "newestFirst":
+            sortedTodos.sort((a, b) =>
+              sortByDescDates(a.creationDate, b.creationDate)
+            );
+            break;
+          default:
+            break;
+        }
       }
-
       setAllTodos(sortedTodos);
     } catch (error) {
       console.error(error);
@@ -79,7 +80,9 @@ export function TodoApp(): JSX.Element {
         console.log(`Deleted todo with ID: ${id}`);
         fetchTodos();
       })
-      .catch((error) => console.log(error));
+      .catch((error) =>
+        console.log(`error found in handleDelete todo ${error}`)
+      );
   };
 
   const handleUpdateStatus = (id: number) => {
@@ -89,14 +92,16 @@ export function TodoApp(): JSX.Element {
 
     if (todoWithGivenId.status === "pending") {
       axios
-        .patch(`${baseUrl}items/${id}}`, {
+        .patch(`${baseUrl}items/${id}`, {
+          description: todoWithGivenId.description,
           status: "completed",
         })
         .then(() => fetchTodos())
         .catch((error) => console.log(error));
     } else {
       axios
-        .patch(`${baseUrl}items/${id}}`, {
+        .patch(`${baseUrl}items/${id}`, {
+          description: todoWithGivenId.description,
           status: "pending",
         })
         .then(() => fetchTodos())
