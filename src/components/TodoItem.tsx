@@ -51,10 +51,7 @@ export function TodoItem({
         )}
       </div>
       <div className="todo-actions">
-        <button
-          onClick={() => onUpdateStatus(id)}
-          className="btn btn-primary btn-sm"
-        >
+        <button onClick={() => onUpdateStatus(id)}>
           {todo.status === "pending" ? "Mark as completed" : "Mark as pending"}
         </button>
         <button
@@ -62,18 +59,10 @@ export function TodoItem({
             setIsEditing((prev) => (prev === false ? true : false));
             setUpdatedTodoDescription(todo.description);
           }}
-          className="btn btn-warning btn-sm"
         >
           {isEditing === false ? "Update" : "Cancel"}
         </button>
-        {!isEditing && (
-          <button
-            className="btn btn-danger btn-sm"
-            onClick={(e) => onDelete(e, id)}
-          >
-            Delete
-          </button>
-        )}
+        {!isEditing && <button onClick={(e) => onDelete(e, id)}>Delete</button>}
       </div>
     </div>
   );

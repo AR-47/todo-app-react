@@ -1,4 +1,5 @@
 import { newTodoInputProps } from "../interfaces";
+import { FormControl, Input, Button } from "@chakra-ui/react";
 
 export function NewTodoInput({
   onSubmitNewTodo,
@@ -7,16 +8,18 @@ export function NewTodoInput({
 }: newTodoInputProps): JSX.Element {
   return (
     <form onSubmit={onSubmitNewTodo}>
-      <input
-        name="description"
-        type="text"
-        placeholder="Add a new task"
-        value={newTodo}
-        onChange={(e) => setNewTodo(e.target.value)}
-      />
-      <button type="submit" className="btn btn-success btn-sm">
-        Add
-      </button>
+      <FormControl>
+        <Input
+          name="description"
+          type="text"
+          placeholder="Add a new task"
+          value={newTodo}
+          onChange={(e) => setNewTodo(e.target.value)}
+        />
+        <Button variant="solid" colorScheme="gray" type="submit">
+          Add
+        </Button>
+      </FormControl>
     </form>
   );
 }

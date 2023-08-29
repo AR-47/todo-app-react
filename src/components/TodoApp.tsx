@@ -4,7 +4,8 @@ import axios from "axios";
 import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 import { ITodo } from "../interfaces";
 import { NewTodoInput } from "./NewTodoInput";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Heading } from "@chakra-ui/react";
+import "../styles/todoApp.css";
 
 export const baseUrl =
   process.env.NODE_ENV === "production"
@@ -125,6 +126,7 @@ export function TodoApp(): JSX.Element {
 
   return (
     <div>
+      <Heading>To-do App</Heading>
       <NewTodoInput
         onSubmitNewTodo={handleAddNewTodo}
         newTodo={newTodoDescription}
