@@ -3,6 +3,14 @@ import axios from "axios";
 import { useState } from "react";
 import { baseUrl } from "./TodoApp";
 import { todoItemProps } from "../interfaces";
+import {
+  Button,
+  Input,
+  FormControl,
+  Box,
+  HStack,
+  Text,
+} from "@chakra-ui/react";
 
 export function TodoItem({
   id,
@@ -24,7 +32,6 @@ export function TodoItem({
         status: todo.status,
       })
       .then(() => {
-        console.log("in the .then of the axios patch handler function");
         refreshTodos();
       })
       .catch((error) =>
@@ -34,36 +41,46 @@ export function TodoItem({
   };
 
   return (
-    <div className="todo-card">
-      <div className="todo-content">
+    <Box className="todo-card">
+      <Box className="todo-content">
         {isEditing === false ? (
-          <p>{todo.description}</p>
+          <Text fontSize="2xl">{todo.description}</Text>
         ) : (
-          <form onSubmit={handleEditTodo}>
-            <input
-              name="description"
-              type="text"
-              value={updatedTodoDescription}
-              onChange={(e) => setUpdatedTodoDescription(e.target.value)}
-            />
-            <button type="submit">Edit</button>
-          </form>
+          <HStack direction="row">
+            <form onSubmit={handleEditTodo}>
+              <FormControl>
+                <Input
+                  name="description"
+                  type="text"
+                  value={updatedTodoDescription}
+                  onChange={(e) => setUpdatedTodoDescription(e.target.value)}
+                />
+                <Button type="submit">Edit</Button>
+              </FormControl>
+            </form>
+          </HStack>
         )}
-      </div>
-      <div className="todo-actions">
-        <button onClick={() => onUpdateStatus(id)}>
-          {todo.status === "pending" ? "Mark as completed" : "Mark as pending"}
-        </button>
-        <button
-          onClick={() => {
-            setIsEditing((prev) => (prev === false ? true : false));
-            setUpdatedTodoDescription(todo.description);
-          }}
-        >
-          {isEditing === false ? "Update" : "Cancel"}
-        </button>
-        {!isEditing && <button onClick={(e) => onDelete(e, id)}>Delete</button>}
-      </div>
-    </div>
+      </Box>
+      <Box className="todo-actions">
+        <HStack spacing="3" direction="row" align="center">
+          <Button onClick={() => onUpdateStatus(id)}>
+            {todo.status === "pending"
+              ? "Mark as completed"
+              : "Mark as pending"}
+          </Button>
+          <Button
+            onClick={() => {
+              setIsEditing((prev) => (prev === false ? true : false));
+              setUpdatedTodoDescription(todo.description);
+            }}
+          >
+            {isEditing === false ? "Update" : "Cancel"}
+          </Button>
+          {!isEditing && (
+            <Button onClick={(e) => onDelete(e, id)}>Delete</Button>
+          )}
+        </HStack>
+      </Box>
+    </Box>
   );
 }

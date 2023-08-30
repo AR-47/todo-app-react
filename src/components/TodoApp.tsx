@@ -4,7 +4,7 @@ import axios from "axios";
 import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 import { ITodo } from "../interfaces";
 import { NewTodoInput } from "./NewTodoInput";
-import { Heading } from "@chakra-ui/react";
+import { Heading, Select } from "@chakra-ui/react";
 import "../styles/todoApp.css";
 
 export const baseUrl =
@@ -133,10 +133,10 @@ export function TodoApp(): JSX.Element {
         setNewTodo={setNewTodoDescription}
       />
       <p>Sort by</p>
-      <select name="sortPendingTodosBy" onChange={handleSortBy}>
+      <Select name="sortPendingTodosBy" onChange={handleSortBy}>
         <option value="newestLast">Oldest to newest</option>
         <option value="newestFirst">Newest to oldest</option>
-      </select>
+      </Select>
 
       {pendingTodos.map((todoItem: ITodo) => (
         <TodoItem
