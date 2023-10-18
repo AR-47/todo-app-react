@@ -7,7 +7,7 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import "../styles/newTodoInput.css";
+import { AddIcon } from "@chakra-ui/icons";
 
 export function NewTodoInput({
   onSubmitNewTodo,
@@ -16,7 +16,7 @@ export function NewTodoInput({
 }: newTodoInputProps): JSX.Element {
   return (
     <form className="new-todo-form" onSubmit={onSubmitNewTodo}>
-      <Center>
+      <Center mt={8}>
         <FormControl>
           <InputGroup>
             <Input
@@ -28,8 +28,8 @@ export function NewTodoInput({
               onChange={(e) => setNewTodo(e.target.value)}
             />
             <InputRightElement>
-              <Button variant="solid" colorScheme="gray" type="submit">
-                Add
+              <Button variant="ghost" colorScheme="gray" type="submit">
+                <AddIcon />
               </Button>
             </InputRightElement>
           </InputGroup>
