@@ -4,8 +4,9 @@ import axios from "axios";
 import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 import { ITodo } from "../interfaces";
 import { NewTodoInput } from "./NewTodoInput";
-import { Heading, Select } from "@chakra-ui/react";
+import { Box, Flex, Select, Text } from "@chakra-ui/react";
 import "../styles/todoApp.css";
+import { Header } from "./Header";
 
 export const baseUrl =
   process.env.NODE_ENV === "production"
@@ -24,6 +25,7 @@ export function TodoApp(): JSX.Element {
     (todoItem: ITodo) => todoItem.status === "completed"
   );
 
+  // function should only fetch - need to separate the logic to sort todos
   async function fetchTodos() {
     try {
       const response = await axios.get(baseUrl + "items");
@@ -125,40 +127,51 @@ export function TodoApp(): JSX.Element {
   };
 
   return (
-    <div>
-      <Heading>To-do App</Heading>
-      <NewTodoInput
-        onSubmitNewTodo={handleAddNewTodo}
-        newTodo={newTodoDescription}
-        setNewTodo={setNewTodoDescription}
-      />
-      <p>Sort by</p>
-      <Select name="sortPendingTodosBy" onChange={handleSortBy}>
-        <option value="newestLast">Oldest to newest</option>
-        <option value="newestFirst">Newest to oldest</option>
-      </Select>
+    <div className="todo-app">
+      <Flex direction="column">
+        <Header />
+        <NewTodoInput
+          onSubmitNewTodo={handleAddNewTodo}
+          newTodo={newTodoDescription}
+          setNewTodo={setNewTodoDescription}
+        />
+        <Flex justify="right" align="center" mt={2}>
+          <Box w="80px">Sort by</Box>
+          <Box w="150px">
+            <Select name="sortPendingTodosBy" onChange={handleSortBy}>
+              <option value="newestLast">Oldest first</option>
+              <option value="newestFirst">Newest first</option>
+            </Select>
+          </Box>
+        </Flex>
 
-      {pendingTodos.map((todoItem: ITodo) => (
-        <TodoItem
-          key={todoItem.id}
-          id={todoItem.id}
-          todo={todoItem}
-          onDelete={handleDeleteTodo}
-          onUpdateStatus={handleUpdateStatus}
-          refreshTodos={fetchTodos}
-        />
-      ))}
-      <h2>Completed</h2>
-      {completedTodos.map((todoItem: ITodo) => (
-        <TodoItem
-          key={todoItem.id}
-          id={todoItem.id}
-          todo={todoItem}
-          onDelete={handleDeleteTodo}
-          onUpdateStatus={handleUpdateStatus}
-          refreshTodos={fetchTodos}
-        />
-      ))}
+        <Box>
+          <Text>Pending</Text>
+          {pendingTodos.map((todoItem: ITodo) => (
+            <TodoItem
+              key={todoItem.id}
+              id={todoItem.id}
+              todo={todoItem}
+              onDelete={handleDeleteTodo}
+              onUpdateStatus={handleUpdateStatus}
+              refreshTodos={fetchTodos}
+            />
+          ))}
+        </Box>
+        <Box>
+          <Text>Completed</Text>
+          {completedTodos.map((todoItem: ITodo) => (
+            <TodoItem
+              key={todoItem.id}
+              id={todoItem.id}
+              todo={todoItem}
+              onDelete={handleDeleteTodo}
+              onUpdateStatus={handleUpdateStatus}
+              refreshTodos={fetchTodos}
+            />
+          ))}
+        </Box>
+      </Flex>
     </div>
   );
 }
