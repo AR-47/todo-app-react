@@ -4,8 +4,9 @@ import axios from "axios";
 import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 import { ITodo } from "../interfaces";
 import { NewTodoInput } from "./NewTodoInput";
-import { Heading, Select } from "@chakra-ui/react";
+import { Select } from "@chakra-ui/react";
 import "../styles/todoApp.css";
+import { Header } from "./Header";
 
 export const baseUrl =
   process.env.NODE_ENV === "production"
@@ -24,6 +25,7 @@ export function TodoApp(): JSX.Element {
     (todoItem: ITodo) => todoItem.status === "completed"
   );
 
+  // function should only fetch - need to separate the logic to sort todos
   async function fetchTodos() {
     try {
       const response = await axios.get(baseUrl + "items");
@@ -125,8 +127,8 @@ export function TodoApp(): JSX.Element {
   };
 
   return (
-    <div>
-      <Heading>To-do App</Heading>
+    <div className="todo-app">
+      <Header />
       <NewTodoInput
         onSubmitNewTodo={handleAddNewTodo}
         newTodo={newTodoDescription}
