@@ -11,6 +11,8 @@ import {
   HStack,
   Text,
   Flex,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import {
   CheckIcon,
@@ -49,24 +51,28 @@ export function TodoItem({
   };
 
   return (
-    <Flex className="todo-card">
-      <Box w="80%" className="todo-content">
+    <Flex justify="space-between" className="todo-card">
+      <Box className="todo-content">
         {isEditing === false ? (
           <Text fontSize="2xl">{todo.description}</Text>
         ) : (
-          <HStack direction="row">
-            <form onSubmit={handleEditTodo}>
-              <FormControl>
+          <form onSubmit={handleEditTodo}>
+            <FormControl>
+              <InputGroup w="100%">
                 <Input
                   name="description"
                   type="text"
                   value={updatedTodoDescription}
                   onChange={(e) => setUpdatedTodoDescription(e.target.value)}
                 />
-                <Button type="submit">Edit</Button>
-              </FormControl>
-            </form>
-          </HStack>
+                <InputRightElement>
+                  <Button type="submit">
+                    <CheckIcon />
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
+          </form>
         )}
       </Box>
       <Box className="todo-actions">
@@ -79,14 +85,14 @@ export function TodoItem({
           >
             {isEditing === false ? <EditIcon /> : <CloseIcon />}
           </Button>
-          <Button onClick={() => onUpdateStatus(id)}>
-            {todo.status === "pending" ? <CheckIcon /> : <RepeatClockIcon />}
-          </Button>
-          {!isEditing && (
-            <Button onClick={(e) => onDelete(e, id)}>
-              <DeleteIcon />
+          {isEditing === false && (
+            <Button onClick={() => onUpdateStatus(id)}>
+              {todo.status === "pending" ? <CheckIcon /> : <RepeatClockIcon />}
             </Button>
           )}
+          <Button onClick={(e) => onDelete(e, id)}>
+            <DeleteIcon />
+          </Button>
         </HStack>
       </Box>
     </Flex>
