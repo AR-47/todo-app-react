@@ -10,7 +10,15 @@ import {
   Box,
   HStack,
   Text,
+  Flex,
 } from "@chakra-ui/react";
+import {
+  CheckIcon,
+  CloseIcon,
+  DeleteIcon,
+  EditIcon,
+  RepeatClockIcon,
+} from "@chakra-ui/icons";
 
 export function TodoItem({
   id,
@@ -41,8 +49,8 @@ export function TodoItem({
   };
 
   return (
-    <Box className="todo-card">
-      <Box className="todo-content">
+    <Flex className="todo-card">
+      <Box w="80%" className="todo-content">
         {isEditing === false ? (
           <Text fontSize="2xl">{todo.description}</Text>
         ) : (
@@ -63,24 +71,24 @@ export function TodoItem({
       </Box>
       <Box className="todo-actions">
         <HStack spacing="3" direction="row" align="center">
-          <Button onClick={() => onUpdateStatus(id)}>
-            {todo.status === "pending"
-              ? "Mark as completed"
-              : "Mark as pending"}
-          </Button>
           <Button
             onClick={() => {
               setIsEditing((prev) => (prev === false ? true : false));
               setUpdatedTodoDescription(todo.description);
             }}
           >
-            {isEditing === false ? "Update" : "Cancel"}
+            {isEditing === false ? <EditIcon /> : <CloseIcon />}
+          </Button>
+          <Button onClick={() => onUpdateStatus(id)}>
+            {todo.status === "pending" ? <CheckIcon /> : <RepeatClockIcon />}
           </Button>
           {!isEditing && (
-            <Button onClick={(e) => onDelete(e, id)}>Delete</Button>
+            <Button onClick={(e) => onDelete(e, id)}>
+              <DeleteIcon />
+            </Button>
           )}
         </HStack>
       </Box>
-    </Box>
+    </Flex>
   );
 }
