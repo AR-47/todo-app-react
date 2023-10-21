@@ -115,7 +115,7 @@ export function TodoApp(): JSX.Element {
           <Box w="80px">Sort by</Box>
           <Box w="150px">
             <Select
-              name="sortPendingTodosBy"
+              name="sortTodosBy"
               onChange={(e) => handleSorting(e.target.value)}
             >
               <option value="addedFirst">Oldest first</option>
