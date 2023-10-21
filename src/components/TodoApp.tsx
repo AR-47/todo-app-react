@@ -73,8 +73,7 @@ export function TodoApp(): JSX.Element {
       .catch((error) => console.log(error));
   };
 
-  const handleDeleteTodo = (e: { preventDefault: () => void }, id: number) => {
-    e.preventDefault();
+  const handleDeleteTodo = (id: number) => {
     axios
       .delete(`${baseUrl}items/${id}`)
       .then(() => {

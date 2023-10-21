@@ -8,7 +8,7 @@ export interface ITodo {
 export interface todoItemProps {
   id: number;
   todo: ITodo;
-  onDelete: (e: { preventDefault: () => void }, id: number) => void;
+  onDelete: (id: number) => void;
   onUpdateStatus: (id: number) => void;
   refreshTodos: () => Promise<void>;
 }

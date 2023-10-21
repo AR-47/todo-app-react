@@ -90,7 +90,7 @@ export function TodoItem({
               {todo.status === "pending" ? <CheckIcon /> : <RepeatClockIcon />}
             </Button>
           )}
-          <Button onClick={(e) => onDelete(e, id)}>
+          <Button onClick={(e) => onDelete(id)}>
             <DeleteIcon />
           </Button>
         </HStack>
