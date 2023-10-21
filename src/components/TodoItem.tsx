@@ -27,7 +27,7 @@ export function TodoItem({
   todo,
   onDelete,
   onUpdateStatus,
-  refreshTodos,
+  fetchAndStoreTodos,
 }: todoItemProps): JSX.Element {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [updatedTodoDescription, setUpdatedTodoDescription] = useState<string>(
@@ -41,7 +41,7 @@ export function TodoItem({
         status: todo.status,
       })
       .then(() => {
-        refreshTodos();
+        fetchAndStoreTodos();
       })
       .catch((error) =>
         console.log(`Caught error in handleEditTodo > patch request: ${error}`)

@@ -133,7 +133,7 @@ export function TodoApp(): JSX.Element {
               todo={todoItem}
               onDelete={handleDeleteTodo}
               onUpdateStatus={handleUpdateStatus}
-              refreshTodos={fetchAndStoreTodos}
+              fetchAndStoreTodos={fetchAndStoreTodos}
             />
           ))}
         </Box>
@@ -146,7 +146,7 @@ export function TodoApp(): JSX.Element {
               todo={todoItem}
               onDelete={handleDeleteTodo}
               onUpdateStatus={handleUpdateStatus}
-              refreshTodos={fetchAndStoreTodos}
+              fetchAndStoreTodos={fetchAndStoreTodos}
             />
           ))}
         </Box>

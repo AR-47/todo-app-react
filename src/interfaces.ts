@@ -10,7 +10,7 @@ export interface todoItemProps {
   todo: ITodo;
   onDelete: (id: number) => void;
   onUpdateStatus: (id: number) => void;
-  refreshTodos: () => Promise<void>;
+  fetchAndStoreTodos: () => Promise<void>;
 }
 
 export interface newTodoInputProps {
