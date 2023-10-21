@@ -13,10 +13,16 @@ export const baseUrl =
     ? "https://adil-todo-app.onrender.com/"
     : "http://localhost:4000/";
 
+type sortByState = "addedFirst" | "addedLast";
+
 export function TodoApp(): JSX.Element {
   const [allTodos, setAllTodos] = useState<ITodo[]>([]);
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
-  const [sortBy, setSortBy] = useState<string>("newestLast");
+  const [sortBy, setSortBy] = useState<sortByState>("addedFirst");
+
+  useEffect(() => {
+    fetchAndStoreTodos();
+  }, []);
 
   const pendingTodos = allTodos.filter(
     (todoItem: ITodo) => todoItem.status === "pending"
@@ -25,39 +31,40 @@ export function TodoApp(): JSX.Element {
     (todoItem: ITodo) => todoItem.status === "completed"
   );
 
-  // function should only fetch - need to separate the logic to sort todos
-  async function fetchTodos() {
+  sortTodos();
+
+  async function fetchAndStoreTodos() {
     try {
       const response = await axios.get(baseUrl + "items");
       const todos: ITodo[] = response.data;
-      const sortedTodos: ITodo[] = [...todos];
-
-      if (sortedTodos.length > 0) {
-        switch (sortBy) {
-          case "newestLast":
-            sortedTodos.sort((a, b) =>
-              sortByAscDates(a.creationDate, b.creationDate)
-            );
-            break;
-          case "newestFirst":
-            sortedTodos.sort((a, b) =>
-              sortByDescDates(a.creationDate, b.creationDate)
-            );
-            break;
-          default:
-            break;
-        }
-      }
-      setAllTodos(sortedTodos);
+      setAllTodos(todos);
     } catch (error) {
       console.error(error);
     }
   }
 
-  useEffect(() => {
-    fetchTodos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy]);
+  function sortTodos() {
+    switch (sortBy) {
+      case "addedFirst":
+        pendingTodos.sort((a, b) =>
+          sortByAscDates(a.creationDate, b.creationDate)
+        );
+        completedTodos.sort((a, b) =>
+          sortByAscDates(a.creationDate, b.creationDate)
+        );
+        break;
+      case "addedLast":
+        pendingTodos.sort((a, b) =>
+          sortByDescDates(a.creationDate, b.creationDate)
+        );
+        completedTodos.sort((a, b) =>
+          sortByDescDates(a.creationDate, b.creationDate)
+        );
+        break;
+      default:
+        break;
+    }
+  }
 
   const handleAddNewTodo = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -70,7 +77,7 @@ export function TodoApp(): JSX.Element {
       })
       .then(() => {
         setNewTodoDescription("");
-        fetchTodos();
+        fetchAndStoreTodos();
       })
       .catch((error) => console.log(error));
   };
@@ -81,7 +88,7 @@ export function TodoApp(): JSX.Element {
       .delete(`${baseUrl}items/${id}`)
       .then(() => {
         console.log(`Deleted todo with ID: ${id}`);
-        fetchTodos();
+        fetchAndStoreTodos();
       })
       .catch((error) =>
         console.log(`error found in handleDelete todo ${error}`)
@@ -99,7 +106,7 @@ export function TodoApp(): JSX.Element {
           description: todoWithGivenId.description,
           status: "completed",
         })
-        .then(() => fetchTodos())
+        .then(() => fetchAndStoreTodos())
         .catch((error) => console.log(error));
     } else {
       axios
@@ -107,23 +114,22 @@ export function TodoApp(): JSX.Element {
           description: todoWithGivenId.description,
           status: "pending",
         })
-        .then(() => fetchTodos())
+        .then(() => fetchAndStoreTodos())
         .catch((error) => console.log(error));
     }
   };
 
-  const handleSortBy = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    switch (e.target.value) {
-      case "newestLast":
-        setSortBy("newestLast");
+  const handleSorting = (sortMethod: string) => {
+    switch (sortMethod) {
+      case "addedFirst":
+        setSortBy("addedFirst");
         break;
-      case "newestFirst":
-        setSortBy("newestFirst");
+      case "addedLast":
+        setSortBy("addedLast");
         break;
       default:
         break;
     }
-    fetchTodos();
   };
 
   return (
@@ -138,9 +144,12 @@ export function TodoApp(): JSX.Element {
         <Flex justify="right" align="center" mt={2}>
           <Box w="80px">Sort by</Box>
           <Box w="150px">
-            <Select name="sortPendingTodosBy" onChange={handleSortBy}>
-              <option value="newestLast">Oldest first</option>
-              <option value="newestFirst">Newest first</option>
+            <Select
+              name="sortPendingTodosBy"
+              onChange={(e) => handleSorting(e.target.value)}
+            >
+              <option value="addedFirst">Oldest first</option>
+              <option value="addedLast">Newest first</option>
             </Select>
           </Box>
         </Flex>
@@ -154,7 +163,7 @@ export function TodoApp(): JSX.Element {
               todo={todoItem}
               onDelete={handleDeleteTodo}
               onUpdateStatus={handleUpdateStatus}
-              refreshTodos={fetchTodos}
+              refreshTodos={fetchAndStoreTodos}
             />
           ))}
         </Box>
@@ -167,7 +176,7 @@ export function TodoApp(): JSX.Element {
               todo={todoItem}
               onDelete={handleDeleteTodo}
               onUpdateStatus={handleUpdateStatus}
-              refreshTodos={fetchTodos}
+              refreshTodos={fetchAndStoreTodos}
             />
           ))}
         </Box>
