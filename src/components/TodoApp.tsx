@@ -58,8 +58,7 @@ export function TodoApp(): JSX.Element {
     ];
   }
 
-  const handleAddNewTodo = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  const handleAddNewTodo = () => {
     const currentDate = new Date();
     axios
       .post(baseUrl + "items", {
@@ -129,7 +128,10 @@ export function TodoApp(): JSX.Element {
       <Flex direction="column">
         <Header />
         <NewTodoInput
-          onSubmitNewTodo={handleAddNewTodo}
+          onSubmitNewTodo={(e) => {
+            e.preventDefault();
+            handleAddNewTodo();
+          }}
           newTodo={newTodoDescription}
           setNewTodo={setNewTodoDescription}
         />
