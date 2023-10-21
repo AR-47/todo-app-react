@@ -34,8 +34,7 @@ export function TodoItem({
     todo.description
   );
 
-  const handleEditTodo = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  const handleEditTodo = () => {
     axios
       .patch(`${baseUrl}items/${id}`, {
         description: updatedTodoDescription,
@@ -56,7 +55,12 @@ export function TodoItem({
         {isEditing === false ? (
           <Text fontSize="2xl">{todo.description}</Text>
         ) : (
-          <form onSubmit={handleEditTodo}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleEditTodo();
+            }}
+          >
             <FormControl>
               <InputGroup w="100%">
                 <Input
