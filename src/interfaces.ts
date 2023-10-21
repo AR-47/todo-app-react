@@ -14,7 +14,5 @@ export interface todoItemProps {
 }
 
 export interface newTodoInputProps {
-  newTodo: string;
-  onSubmitNewTodo: (e: { preventDefault: () => void }) => void;
-  setNewTodo: (newTodo: string) => void;
+  fetchAndStoreTodos: () => Promise<void>;
 }

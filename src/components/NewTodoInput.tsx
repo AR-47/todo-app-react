@@ -8,14 +8,32 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
+import { useState } from "react";
+import axios from "axios";
+import { baseUrl } from "./TodoApp";
 
 export function NewTodoInput({
-  onSubmitNewTodo,
-  newTodo,
-  setNewTodo,
+  fetchAndStoreTodos,
 }: newTodoInputProps): JSX.Element {
+  const [newTodoDescription, setNewTodoDescription] = useState<string>("");
+
+  const handleAddNewTodo = () => {
+    const currentDate = new Date();
+    axios
+      .post(baseUrl + "items", {
+        description: newTodoDescription,
+        status: "pending",
+        creationDate: currentDate,
+      })
+      .then(() => {
+        setNewTodoDescription("");
+        fetchAndStoreTodos();
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
-    <form className="new-todo-form" onSubmit={onSubmitNewTodo}>
+    <form className="new-todo-form" onSubmit={handleAddNewTodo}>
       <Center mt={8}>
         <FormControl>
           <InputGroup>
@@ -24,8 +42,8 @@ export function NewTodoInput({
               type="text"
               placeholder="Add a new task"
               variant="filled"
-              value={newTodo}
-              onChange={(e) => setNewTodo(e.target.value)}
+              value={newTodoDescription}
+              onChange={(e) => setNewTodoDescription(e.target.value)}
             />
             <InputRightElement>
               <Button variant="ghost" colorScheme="gray" type="submit">

@@ -17,7 +17,6 @@ type sortByState = "addedFirst" | "addedLast";
 
 export function TodoApp(): JSX.Element {
   const [allTodos, setAllTodos] = useState<ITodo[]>([]);
-  const [newTodoDescription, setNewTodoDescription] = useState<string>("");
   const [sortBy, setSortBy] = useState<sortByState>("addedFirst");
 
   useEffect(() => {
@@ -57,21 +56,6 @@ export function TodoApp(): JSX.Element {
       [...completedTodos].sort(compareFunction),
     ];
   }
-
-  const handleAddNewTodo = () => {
-    const currentDate = new Date();
-    axios
-      .post(baseUrl + "items", {
-        description: newTodoDescription,
-        status: "pending",
-        creationDate: currentDate,
-      })
-      .then(() => {
-        setNewTodoDescription("");
-        fetchAndStoreTodos();
-      })
-      .catch((error) => console.log(error));
-  };
 
   const handleDeleteTodo = (id: number) => {
     axios
@@ -126,14 +110,7 @@ export function TodoApp(): JSX.Element {
     <div className="todo-app">
       <Flex direction="column">
         <Header />
-        <NewTodoInput
-          onSubmitNewTodo={(e) => {
-            e.preventDefault();
-            handleAddNewTodo();
-          }}
-          newTodo={newTodoDescription}
-          setNewTodo={setNewTodoDescription}
-        />
+        <NewTodoInput fetchAndStoreTodos={fetchAndStoreTodos} />
         <Flex justify="right" align="center" mt={2}>
           <Box w="80px">Sort by</Box>
           <Box w="150px">
