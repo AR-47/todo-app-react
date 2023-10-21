@@ -31,7 +31,14 @@ export function TodoApp(): JSX.Element {
     (todoItem: ITodo) => todoItem.status === "completed"
   );
 
-  sortTodos();
+  const compareFunctions = {
+    addedFirst: (a: ITodo, b: ITodo) =>
+      sortByAscDates(a.creationDate, b.creationDate),
+    addedLast: (a: ITodo, b: ITodo) =>
+      sortByDescDates(a.creationDate, b.creationDate),
+  };
+
+  const [sortedPendingTodos, sortedCompletedTodos] = sortTodos();
 
   async function fetchAndStoreTodos() {
     try {
@@ -44,26 +51,11 @@ export function TodoApp(): JSX.Element {
   }
 
   function sortTodos() {
-    switch (sortBy) {
-      case "addedFirst":
-        pendingTodos.sort((a, b) =>
-          sortByAscDates(a.creationDate, b.creationDate)
-        );
-        completedTodos.sort((a, b) =>
-          sortByAscDates(a.creationDate, b.creationDate)
-        );
-        break;
-      case "addedLast":
-        pendingTodos.sort((a, b) =>
-          sortByDescDates(a.creationDate, b.creationDate)
-        );
-        completedTodos.sort((a, b) =>
-          sortByDescDates(a.creationDate, b.creationDate)
-        );
-        break;
-      default:
-        break;
-    }
+    const compareFunction = compareFunctions[sortBy];
+    return [
+      [...pendingTodos].sort(compareFunction),
+      [...completedTodos].sort(compareFunction),
+    ];
   }
 
   const handleAddNewTodo = (e: { preventDefault: () => void }) => {
@@ -156,7 +148,7 @@ export function TodoApp(): JSX.Element {
 
         <Box>
           <Text>Pending</Text>
-          {pendingTodos.map((todoItem: ITodo) => (
+          {sortedPendingTodos.map((todoItem: ITodo) => (
             <TodoItem
               key={todoItem.id}
               id={todoItem.id}
@@ -169,7 +161,7 @@ export function TodoApp(): JSX.Element {
         </Box>
         <Box>
           <Text>Completed</Text>
-          {completedTodos.map((todoItem: ITodo) => (
+          {sortedCompletedTodos.map((todoItem: ITodo) => (
             <TodoItem
               key={todoItem.id}
               id={todoItem.id}
