@@ -18,18 +18,22 @@ export function NewTodoInput({
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
 
   const handleAddNewTodo = () => {
-    const currentDate = new Date();
-    axios
-      .post(baseUrl + "items", {
-        description: newTodoDescription,
-        status: "pending",
-        creationDate: currentDate,
-      })
-      .then(() => {
-        setNewTodoDescription("");
-        fetchAndStoreTodos();
-      })
-      .catch((error) => console.log(error));
+    try {
+      const currentDate = new Date();
+      axios
+        .post(baseUrl + "items", {
+          description: newTodoDescription,
+          status: "pending",
+          creationDate: currentDate,
+        })
+        .then(() => {
+          setNewTodoDescription("");
+          fetchAndStoreTodos();
+        })
+        .catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
