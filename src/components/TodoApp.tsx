@@ -10,7 +10,7 @@ import { Header } from "./Header";
 
 export const baseUrl =
   process.env.NODE_ENV === "production"
-    ? "https://adil-todo-app.onrender.com/"
+    ? "https://todo-app-staging.onrender.com"
     : "http://localhost:4000/";
 
 type sortByState = "addedFirst" | "addedLast";
