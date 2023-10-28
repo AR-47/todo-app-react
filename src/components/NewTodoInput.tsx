@@ -37,7 +37,7 @@ export function NewTodoInput({
   };
 
   return (
-    <form className="new-todo-form" onSubmit={handleAddNewTodo}>
+    <form className="new-todo-form">
       <Center mt={8}>
         <FormControl>
           <InputGroup>
@@ -50,7 +50,11 @@ export function NewTodoInput({
               onChange={(e) => setNewTodoDescription(e.target.value)}
             />
             <InputRightElement>
-              <Button variant="ghost" colorScheme="gray" type="submit">
+              <Button
+                variant="ghost"
+                colorScheme="gray"
+                onClick={handleAddNewTodo}
+              >
                 <AddIcon />
               </Button>
             </InputRightElement>
