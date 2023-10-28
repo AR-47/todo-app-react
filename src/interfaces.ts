@@ -8,8 +8,7 @@ export interface ITodo {
 export interface todoItemProps {
   id: number;
   todo: ITodo;
-  onDelete: (id: number) => void;
-  onUpdateStatus: (id: number) => void;
+  handleUpdateStatus: (id: number) => void;
   fetchAndStoreTodos: () => Promise<void>;
 }
 

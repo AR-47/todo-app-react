@@ -1,17 +1,13 @@
 import { useEffect, useState } from "react";
+import { ITodo } from "../interfaces";
 import { TodoItem } from "./TodoItem";
+import { NewTodoInput } from "./NewTodoInput";
+import { Header } from "./Header";
 import axios from "axios";
 import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
-import { ITodo } from "../interfaces";
-import { NewTodoInput } from "./NewTodoInput";
+import { baseUrl } from "../utils/baseUrl";
 import { Box, Flex, Select, Text } from "@chakra-ui/react";
 import "../styles/todoApp.css";
-import { Header } from "./Header";
-
-export const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://todo-app-staging.onrender.com"
-    : "http://localhost:4000/";
 
 type sortByState = "addedFirst" | "addedLast";
 
@@ -56,18 +52,6 @@ export function TodoApp(): JSX.Element {
       [...completedTodos].sort(compareFunction),
     ];
   }
-
-  const handleDeleteTodo = (id: number) => {
-    axios
-      .delete(`${baseUrl}items/${id}`)
-      .then(() => {
-        console.log(`Deleted todo with ID: ${id}`);
-        fetchAndStoreTodos();
-      })
-      .catch((error) =>
-        console.log(`error found in handleDelete todo ${error}`)
-      );
-  };
 
   const handleUpdateStatus = (id: number) => {
     const todoWithGivenId = allTodos.find(
@@ -131,8 +115,7 @@ export function TodoApp(): JSX.Element {
               key={todoItem.id}
               id={todoItem.id}
               todo={todoItem}
-              onDelete={handleDeleteTodo}
-              onUpdateStatus={handleUpdateStatus}
+              handleUpdateStatus={handleUpdateStatus}
               fetchAndStoreTodos={fetchAndStoreTodos}
             />
           ))}
@@ -144,8 +127,7 @@ export function TodoApp(): JSX.Element {
               key={todoItem.id}
               id={todoItem.id}
               todo={todoItem}
-              onDelete={handleDeleteTodo}
-              onUpdateStatus={handleUpdateStatus}
+              handleUpdateStatus={handleUpdateStatus}
               fetchAndStoreTodos={fetchAndStoreTodos}
             />
           ))}
