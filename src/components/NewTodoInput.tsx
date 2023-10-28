@@ -10,7 +10,7 @@ import {
 import { AddIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import axios from "axios";
-import { baseUrl } from "./TodoApp";
+import { baseUrl } from "../utils/baseUrl";
 
 export function NewTodoInput({
   fetchAndStoreTodos,
@@ -19,12 +19,9 @@ export function NewTodoInput({
 
   const handleAddNewTodo = () => {
     try {
-      const currentDate = new Date();
       axios
         .post(baseUrl + "items", {
           description: newTodoDescription,
-          status: "pending",
-          creationDate: currentDate,
         })
         .then(() => {
           setNewTodoDescription("");
@@ -37,30 +34,28 @@ export function NewTodoInput({
   };
 
   return (
-    <form className="new-todo-form">
-      <Center mt={8}>
-        <FormControl>
-          <InputGroup>
-            <Input
-              name="description"
-              type="text"
-              placeholder="Add a new task"
-              variant="filled"
-              value={newTodoDescription}
-              onChange={(e) => setNewTodoDescription(e.target.value)}
-            />
-            <InputRightElement>
-              <Button
-                variant="ghost"
-                colorScheme="gray"
-                onClick={handleAddNewTodo}
-              >
-                <AddIcon />
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </FormControl>
-      </Center>
-    </form>
+    <Center mt={8}>
+      <FormControl>
+        <InputGroup>
+          <Input
+            name="description"
+            type="text"
+            placeholder="Add a new task"
+            variant="filled"
+            value={newTodoDescription}
+            onChange={(e) => setNewTodoDescription(e.target.value)}
+          />
+          <InputRightElement>
+            <Button
+              variant="ghost"
+              colorScheme="gray"
+              onClick={handleAddNewTodo}
+            >
+              <AddIcon />
+            </Button>
+          </InputRightElement>
+        </InputGroup>
+      </FormControl>
+    </Center>
   );
 }
