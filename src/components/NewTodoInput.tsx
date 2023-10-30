@@ -1,60 +1,62 @@
 import { newTodoInputProps } from "../interfaces";
-import {
-  FormControl,
-  Input,
-  Button,
-  Center,
-  InputGroup,
-  InputRightElement,
-} from "@chakra-ui/react";
+import { FormControl, Input, Button, Center, Flex } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 import axios from "axios";
 import { baseUrl } from "../utils/baseUrl";
+import "../styles/newTodoInput.css";
 
 export function NewTodoInput({
   fetchAndStoreTodos,
 }: newTodoInputProps): JSX.Element {
-  const [newTodoDescription, setNewTodoDescription] = useState<string>("");
+  const [newDescription, setNewDescription] = useState<string>("");
+  const [newDueDate, setNewDueDate] = useState<string>("");
 
-  const handleAddNewTodo = () => {
+  function handleAddNewTodo() {
     try {
       axios
         .post(baseUrl + "items", {
-          description: newTodoDescription,
+          description: newDescription,
+          dueDate: newDueDate,
         })
         .then(() => {
-          setNewTodoDescription("");
+          setNewDescription("");
+          setNewDueDate("");
           fetchAndStoreTodos();
         })
         .catch((error) => console.log(error));
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   return (
     <Center mt={8}>
-      <FormControl>
-        <InputGroup>
+      <FormControl className="new-todo-form">
+        <Flex>
           <Input
             name="description"
             type="text"
             placeholder="Add a new task"
             variant="filled"
-            value={newTodoDescription}
-            onChange={(e) => setNewTodoDescription(e.target.value)}
+            value={newDescription}
+            mr={1}
+            onChange={(e) => setNewDescription(e.target.value)}
           />
-          <InputRightElement>
-            <Button
-              variant="ghost"
-              colorScheme="gray"
-              onClick={handleAddNewTodo}
-            >
-              <AddIcon />
-            </Button>
-          </InputRightElement>
-        </InputGroup>
+
+          <Input
+            w="230px"
+            size="md"
+            type="date"
+            variant="filled"
+            mr={1}
+            value={newDueDate}
+            onChange={(e) => setNewDueDate(e.target.value)}
+          />
+          <Button colorScheme="gray" onClick={handleAddNewTodo}>
+            <AddIcon />
+          </Button>
+        </Flex>
       </FormControl>
     </Center>
   );
