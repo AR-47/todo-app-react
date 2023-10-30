@@ -105,7 +105,7 @@ export function TodoApp(): JSX.Element {
         <Header />
         <NewTodoInput fetchAndStoreTodos={fetchAndStoreTodos} />
 
-        <Flex justify="right" align="center" mt={2} mb={5}>
+        <Flex justify="left" align="center" mt={2} mb={5}>
           <Text as="b" w="80px">
             Sort by
           </Text>
