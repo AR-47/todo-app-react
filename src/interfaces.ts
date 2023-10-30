@@ -3,6 +3,7 @@ export interface ITodo {
   description: string;
   status: "completed" | "pending";
   creationDate: Date;
+  dueDate: Date;
 }
 
 export interface todoItemProps {
