@@ -1,5 +1,4 @@
 import { Center, Heading } from "@chakra-ui/react";
-import "../styles/header.css";
 
 export function Header(): JSX.Element {
   return (

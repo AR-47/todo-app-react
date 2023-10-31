@@ -1,1 +1,2 @@
-export const baseUrl = "https://todo-app-staging.onrender.com";
+export const baseUrl = process.env.REACT_APP_EXPRESS_SERVER_URL;
+

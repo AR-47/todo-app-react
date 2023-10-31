@@ -6,8 +6,17 @@ import { Header } from "./Header";
 import axios from "axios";
 import { sortByAscDates, sortByDescDates } from "../utils/compareTwoDates";
 import { baseUrl } from "../utils/baseUrl";
-import { Box, Flex, Select, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  HStack,
+  Heading,
+  Select,
+  Text,
+} from "@chakra-ui/react";
 import "../styles/todoApp.css";
+import { FaClipboardList, FaCircleCheck } from "react-icons/fa6";
 
 type sortByState = "addedFirst" | "addedLast";
 
@@ -95,8 +104,11 @@ export function TodoApp(): JSX.Element {
       <Flex direction="column">
         <Header />
         <NewTodoInput fetchAndStoreTodos={fetchAndStoreTodos} />
-        <Flex justify="right" align="center" mt={2}>
-          <Box w="80px">Sort by</Box>
+
+        <Flex justify="left" align="center" mt={2} mb={5}>
+          <Text as="b" w="80px">
+            Sort by
+          </Text>
           <Box w="150px">
             <Select
               name="sortTodosBy"
@@ -108,8 +120,23 @@ export function TodoApp(): JSX.Element {
           </Box>
         </Flex>
 
+        <Center>
+          {allTodos.length === 0 && (
+            <Heading as="h2" size={"lg"}>
+              Your to-do list is empty
+            </Heading>
+          )}
+        </Center>
+
         <Box>
-          <Text>Pending</Text>
+          {sortedPendingTodos.length > 0 && (
+            <HStack>
+              <FaClipboardList />
+              <Heading as="h2" size={"lg"}>
+                Ongoing
+              </Heading>
+            </HStack>
+          )}
           {sortedPendingTodos.map((todoItem: ITodo) => (
             <TodoItem
               key={todoItem.id}
@@ -120,8 +147,16 @@ export function TodoApp(): JSX.Element {
             />
           ))}
         </Box>
+
         <Box>
-          <Text>Completed</Text>
+          {sortedCompletedTodos.length > 0 && (
+            <HStack>
+              <FaCircleCheck />
+              <Heading as="h2" size={"lg"}>
+                Completed
+              </Heading>
+            </HStack>
+          )}
           {sortedCompletedTodos.map((todoItem: ITodo) => (
             <TodoItem
               key={todoItem.id}
