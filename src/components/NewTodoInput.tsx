@@ -37,7 +37,7 @@ export function NewTodoInput({
           <Input
             name="description"
             type="text"
-            placeholder="Add a new task"
+            placeholder="What's on your mind..."
             variant="filled"
             value={newDescription}
             mr={1}
@@ -53,7 +53,7 @@ export function NewTodoInput({
             value={newDueDate}
             onChange={(e) => setNewDueDate(e.target.value)}
           />
-          <Button colorScheme="gray" onClick={handleAddNewTodo}>
+          <Button onClick={handleAddNewTodo}>
             <AddIcon />
           </Button>
         </Flex>

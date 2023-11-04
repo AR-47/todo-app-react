@@ -6,13 +6,16 @@ export interface ITodo {
   dueDate: Date;
 }
 
-export interface todoItemProps {
-  id: number;
-  todo: ITodo;
-  handleUpdateStatus: (id: number) => void;
+export interface newTodoInputProps {
   fetchAndStoreTodos: () => Promise<void>;
 }
 
-export interface newTodoInputProps {
+export interface todosTableProps {
+  sortedTodos: ITodo[];
+  fetchAndStoreTodos: () => Promise<void>;
+}
+
+export interface editableInputAreaProps {
+  todo: ITodo;
   fetchAndStoreTodos: () => Promise<void>;
 }
