@@ -86,18 +86,18 @@ export function TodoApp(): JSX.Element {
         </Box>
       </Flex>
 
-      <Center>
-        {allTodos.length === 0 && (
+      {allTodos.length === 0 ? (
+        <Center>
           <Heading as="h2" size={"lg"}>
             Your to-do list is empty
           </Heading>
-        )}
-      </Center>
-
-      <TodosTable
-        sortedTodos={sortedTodos}
-        fetchAndStoreTodos={fetchAndStoreTodos}
-      />
+        </Center>
+      ) : (
+        <TodosTable
+          sortedTodos={sortedTodos}
+          fetchAndStoreTodos={fetchAndStoreTodos}
+        />
+      )}
     </Flex>
   );
 }
