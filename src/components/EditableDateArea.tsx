@@ -32,8 +32,10 @@ export function EditableDateArea({
       .catch((error) => console.log(error));
   };
 
-  const dd = new Date(todo.dueDate).getDate();
-  const mm = new Date(todo.dueDate).getMonth() + 1;
+  const dd = new Date(todo.dueDate).getDate().toString().padStart(2, "0");
+  const mm = (new Date(todo.dueDate).getMonth() + 1)
+    .toString()
+    .padStart(2, "0");
   const yyyy = new Date(todo.dueDate).getFullYear();
   const formattedDueDate = dd + "/" + mm + "/" + yyyy;
 
